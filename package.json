@@ -1,0 +1,16 @@
+{
+  "name": "sistema-frequencia-pet",
+  "version": "1.0.0",
+  "description": "Sistema de frequência para bolsa PET Saúde Digital",
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build"
+  },
+  "keywords": ["frequencia", "pet", "saude-digital"],
+  "author": "",
+  "license": "MIT"
+}
+
