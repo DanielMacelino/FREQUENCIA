@@ -6,7 +6,10 @@ import frequenciaRoutes from './routes/frequencia';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*',
+  credentials: true
+}));
 app.use(express.json());
 
 // Inicializar banco de dados
