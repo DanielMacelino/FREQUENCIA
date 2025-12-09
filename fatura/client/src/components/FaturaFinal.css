@@ -1,0 +1,281 @@
+.fatura-final {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.fatura-final h2 {
+  color: #667eea;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.fatura-final-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.fatura-final-calculo {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 2rem;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+}
+
+.calculo-formula {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formula-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.formula-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #667eea;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.formula-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+  margin: 0.5rem 0;
+}
+
+.formula-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+}
+
+.formula-label {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+.formula-valor {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.formula-valor.positivo {
+  color: #667eea;
+}
+
+.formula-valor.negativo {
+  color: #f093fb;
+}
+
+.formula-item.total {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+  border-color: #ffc107;
+}
+
+.formula-valor.total-valor {
+  color: #f59e0b;
+  font-size: 1.3rem;
+}
+
+.formula-sinal {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #667eea;
+  padding: 0.5rem;
+}
+
+.formula-resultado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  margin-top: 0.5rem;
+}
+
+.resultado-label {
+  font-weight: 600;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.resultado-valor {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.resultado-valor.positivo {
+  color: #4ade80;
+}
+
+.resultado-valor.negativo {
+  color: #fbbf24;
+}
+
+.fatura-final-grafico {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+}
+
+.fatura-final-grafico h3 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.chart-container {
+  position: relative;
+  height: 300px;
+  margin-bottom: 1rem;
+}
+
+.grafico-legenda {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.legenda-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.fatura-final-resumo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+}
+
+.resumo-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.resumo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.resumo-card.destaque {
+  background: rgba(255, 255, 255, 1);
+  border: 3px solid #4ade80;
+  box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3);
+}
+
+.resumo-label {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 600;
+  text-align: center;
+}
+
+.resumo-valor {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+}
+
+.resumo-valor.positivo {
+  color: #10b981;
+}
+
+.resumo-valor.negativo {
+  color: #f59e0b;
+}
+
+.resumo-valor.total-geral {
+  color: #f59e0b;
+}
+
+@media (max-width: 968px) {
+  .fatura-final-content {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fatura-final {
+    padding: 1.5rem;
+  }
+
+  .fatura-final-calculo,
+  .fatura-final-grafico {
+    padding: 1.5rem;
+  }
+
+  .calculo-formula {
+    gap: 0.75rem;
+  }
+
+  .formula-item {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .formula-valor {
+    font-size: 1rem;
+  }
+
+  .resultado-valor {
+    font-size: 1.5rem;
+  }
+
+  .fatura-final-resumo {
+    grid-template-columns: 1fr;
+  }
+
+  .grafico-legenda {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
