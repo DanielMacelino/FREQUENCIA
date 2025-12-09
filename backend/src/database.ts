@@ -12,7 +12,7 @@ export const dbAll = promisify(db.all.bind(db)) as (sql: string, params?: any[])
 // Função customizada para db.run que retorna lastID
 export function dbRun(sql: string, params?: any[]): Promise<{ lastID: number; changes: number }> {
   return new Promise((resolve, reject) => {
-    db.run(sql, params || [], function(err) {
+    db.run(sql, params || [], function(this: sqlite3.RunResult, err: Error | null) {
       if (err) {
         reject(err);
       } else {
@@ -42,7 +42,7 @@ export function initDatabase() {
         observacao TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
-    `, (err) => {
+    `, (err: Error | null) => {
       if (err) {
         console.error('Erro ao criar tabela:', err);
       } else {
