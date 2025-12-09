@@ -65,7 +65,7 @@ export const supabaseService = {
       
       if (error) throw error;
       const total = (data || []).reduce((sum: number, item: any) => sum + item.horas, 0);
-      return total.toFixed(2);
+      return parseFloat(total.toFixed(2));
     },
   },
 

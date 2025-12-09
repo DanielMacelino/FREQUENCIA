@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import MesSelector from './components/MesSelector';
 import FaturaView from './components/FaturaView';
@@ -20,31 +20,31 @@ function App() {
   const anoAtual = new Date().getFullYear();
   const isMesAtual = mesSelecionado === mesAtual && anoSelecionado === anoAtual;
 
-  useEffect(() => {
-    carregarGastos();
-    carregarEstatisticas();
-  }, [mesSelecionado, anoSelecionado]);
-
-  const carregarGastos = async () => {
+  const carregarGastos = useCallback(async () => {
     setLoading(true);
     try {
       const data = await supabaseService.gastos.getByPeriodo(anoSelecionado, mesSelecionado);
       setGastos(data);
-    } catch (error) {
-      console.error('Erro ao carregar gastos:', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [anoSelecionado, mesSelecionado]);
 
-  const carregarEstatisticas = async () => {
+  const carregarEstatisticas = useCallback(async () => {
     try {
       const data = await supabaseService.gastos.getEstatisticas(anoSelecionado, mesSelecionado);
       setEstatisticas(data);
-    } catch (error) {
-      console.error('Erro ao carregar estatísticas:', error);
+    } catch (err) {
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Erro ao carregar estatísticas:', err);
+      }
     }
-  };
+  }, [anoSelecionado, mesSelecionado]);
+
+  useEffect(() => {
+    carregarGastos();
+    carregarEstatisticas();
+  }, [carregarGastos, carregarEstatisticas]);
 
   const handleAdicionarGasto = async (novoGasto: Omit<Gasto, 'id' | 'data_criacao'>) => {
     try {

@@ -1,4 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AppProvider } from './context/AppContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import Dashboard from './pages/Dashboard';
 import './App.css';
 import UserSelect from './components/UserSelect';
@@ -7,14 +9,19 @@ import FaturaEmbed from './pages/FaturaEmbed';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<UserSelect />} />
-        <Route path="/choice" element={<Choice />} />
-        <Route path="/frequencia" element={<Dashboard />} />
-        <Route path="/fatura" element={<FaturaEmbed />} />
-      </Routes>
-    </Router>
+    <ErrorBoundary>
+      <AppProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<UserSelect />} />
+            <Route path="/choice" element={<Choice />} />
+            <Route path="/frequencia" element={<Dashboard />} />
+            <Route path="/fatura" element={<FaturaEmbed />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Router>
+      </AppProvider>
+    </ErrorBoundary>
   );
 }
 

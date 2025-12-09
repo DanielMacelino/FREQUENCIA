@@ -1,16 +1,37 @@
 {
   "name": "sistema-frequencia-pet",
   "version": "1.0.0",
-  "description": "Sistema de frequência para bolsa PET Saúde Digital",
+  "description": "Sistema de frequência e gestão de gastos para PET Saúde Digital",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "fatura/client",
+    "backend"
+  ],
   "scripts": {
-    "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm run dev",
-    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
-    "build:backend": "cd backend && npm run build",
-    "build:frontend": "cd frontend && npm run build"
+    "dev": "npm run dev --workspaces",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:fatura": "npm run dev --workspace=fatura/client",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build": "npm run build --workspaces",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:fatura": "npm run build --workspace=fatura/client",
+    "build:backend": "npm run build --workspace=backend",
+    "lint": "npm run lint --workspaces --if-present",
+    "type-check": "npm run type-check --workspaces --if-present"
   },
-  "keywords": ["frequencia", "pet", "saude-digital"],
-  "author": "",
-  "license": "MIT"
+  "keywords": [
+    "frequencia",
+    "pet",
+    "saude-digital",
+    "gestao",
+    "supabase"
+  ],
+  "author": "PET Saúde Digital",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
 }
 
