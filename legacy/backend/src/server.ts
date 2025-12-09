@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import { initDatabase } from './database';
 import frequenciaRoutes from './routes/frequencia';
 
 const app = express();
@@ -11,9 +10,6 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
-
-// Inicializar banco de dados
-initDatabase();
 
 // Rotas
 app.use('/api/frequencias', frequenciaRoutes);
@@ -26,4 +22,3 @@ app.get('/api/health', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
-

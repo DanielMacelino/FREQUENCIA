@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Pie, Line } from 'react-chartjs-2';
+import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement, PointElement, LineElement } from 'chart.js';
 import { supabaseService } from '../services/supabaseClient';
 import GastoModal from '../components/GastoModal';
@@ -7,7 +7,7 @@ import './Fatura.css';
 
 ChartJS.register(CategoryScale, LinearScale, Title, Tooltip, Legend, ArcElement, PointElement, LineElement);
 
-const getRandomColor = () => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.6)`;
+const getRandomColor = () => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`;
 
 export default function Fatura() {
   const [ano, setAno] = useState<number>(new Date().getFullYear());
@@ -39,12 +39,10 @@ export default function Fatura() {
 
   const handleSaveGasto = async (gasto: any) => {
     try {
-      // Ensure valor is a number before saving
       const gastoToSave = { ...gasto, valor: Number(gasto.valor) };
-
-      if (gastoToSave.id) { // Update
+      if (gastoToSave.id) {
         await supabaseService.gastos.update(gastoToSave.id, gastoToSave);
-      } else { // Create
+      } else {
         await supabaseService.gastos.create({ ...gastoToSave, ano, mes });
       }
       load();
@@ -65,75 +63,72 @@ export default function Fatura() {
     }
   };
 
-  // KPIs
+  // KPIs e Dados para Gráficos
   const totalGastos = gastos.reduce((acc, g) => acc + Number(g.valor || 0), 0);
-  const topCategoria = gastos.reduce((acc, g) => {
+  const gastosPorCategoria = gastos.reduce((acc, g) => {
     acc[g.categoria] = (acc[g.categoria] || 0) + Number(g.valor || 0);
     return acc;
   }, {});
-  const topPessoa = gastos.reduce((acc, g) => {
+  const gastosPorPessoa = gastos.reduce((acc, g) => {
     acc[g.pessoa] = (acc[g.pessoa] || 0) + Number(g.valor || 0);
     return acc;
   }, {});
+  const rankingPessoas = Object.entries(gastosPorPessoa).sort(([, a]: any, [, b]: any) => b - a);
 
-  const [topCat, topCatValue] = Object.entries(topCategoria).sort((a: any, b: any) => b[1] - a[1])[0] || ['N/A', 0];
-  const [topP, topPValue] = Object.entries(topPessoa).sort((a: any, b: any) => b[1] - a[1])[0] || ['N/A', 0];
-
-  // Chart Data
+  // Dados do Gráfico de Pizza
   const pieData = {
-    labels: Object.keys(topCategoria),
+    labels: Object.keys(gastosPorCategoria),
     datasets: [{
-      data: Object.values(topCategoria),
-      backgroundColor: Object.keys(topCategoria).map(() => getRandomColor()),
-    }],
-  };
-
-  const lineData = {
-    labels: [...new Set(gastos.map(g => new Date(g.created_at).toLocaleDateString('pt-BR')))].sort((a,b) => a.localeCompare(b)),
-    datasets: [{
-      label: 'Evolução dos Gastos',
-      data: gastos.reduce((acc, g) => {
-        const date = new Date(g.created_at).toLocaleDateString('pt-BR');
-        acc[date] = (acc[date] || 0) + Number(g.valor || 0);
-        return acc;
-      }, {}),
-      fill: false,
-      borderColor: '#4bc0c0',
+      data: Object.values(gastosPorCategoria),
+      backgroundColor: Object.keys(gastosPorCategoria).map(() => getRandomColor()),
+      hoverOffset: 4,
     }],
   };
 
   return (
-    <div className="fatura-page">
+    <div className="fatura-container">
       <header className="fatura-header">
         <h1>Fatura Mensal</h1>
-        <div className="header-actions">
-          <input type="month" value={`${ano}-${mes.toString().padStart(2, '0')}`} onChange={e => {
+        <div className="header-controls">
+          <input type="month" className="month-picker" value={`${ano}-${mes.toString().padStart(2, '0')}`} onChange={e => {
             const [year, month] = e.target.value.split('-');
             setAno(Number(year));
             setMes(Number(month));
           }} />
-          <button className="btn-primary" onClick={() => { setGastoAtual(null); setIsModalOpen(true); }}>Adicionar Gasto</button>
+          <button className="btn-add" onClick={() => { setGastoAtual(null); setIsModalOpen(true); }}>Adicionar Gasto</button>
         </div>
       </header>
 
-      {error && <div className="error-box">{error}</div>}
-      {loading && <p>Carregando dados...</p>}
+      {error && <div className="error-banner">{error}</div>}
+      {loading && <div className="loading-spinner">Carregando...</div>}
 
-      <section className="kpi-section">
-        <div className="kpi-card"><h4>Total Gasto</h4><p>{totalGastos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p></div>
-        <div className="kpi-card"><h4>Categoria Principal</h4><p>{String(topCat)} ({Number(topCatValue).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})</p></div>
-        <div className="kpi-card"><h4>Quem Mais Gastou</h4><p>{String(topP)} ({Number(topPValue).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})</p></div>
-      </section>
+      <div className="kpi-bar">
+        <div className="kpi-item"><span>Total Gasto</span><strong>{totalGastos.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong></div>
+      </div>
 
-      <section className="charts-section">
-        <div className="chart-card"><h3>Gastos por Categoria</h3>{gastos.length > 0 ? <Pie data={pieData} /> : <p>Sem dados para exibir.</p>}</div>
-        <div className="chart-card"><h3>Evolução dos Gastos</h3>{gastos.length > 0 ? <Line data={lineData} />: <p>Sem dados para exibir.</p>}</div>
-      </section>
+      <main className="fatura-grid">
+        <div className="grid-item chart-container">
+          <h3>Gastos por Categoria</h3>
+          {gastos.length > 0 ? <Pie data={pieData} options={{ responsive: true, maintainAspectRatio: false }} /> : <p>Sem dados para exibir.</p>}
+        </div>
 
-      <section className="table-section">
+        <div className="grid-item ranking-container">
+          <h3>Ranking de Despesas</h3>
+          <ul className="ranking-list">
+            {rankingPessoas.map(([pessoa, valor]) => (
+              <li key={pessoa} className="ranking-item">
+                <span>{pessoa}</span>
+                <strong>{Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </main>
+
+      <section className="transactions-section">
         <h3>Todos os Lançamentos</h3>
-        <div className="table-container">
-          <table>
+        <div className="transactions-table-wrapper">
+          <table className="transactions-table">
             <thead><tr><th>Descrição</th><th>Valor</th><th>Categoria</th><th>Pessoa</th><th>Data</th><th>Ações</th></tr></thead>
             <tbody>
               {gastos.map(g => (
@@ -143,9 +138,9 @@ export default function Fatura() {
                   <td>{g.categoria}</td>
                   <td>{g.pessoa}</td>
                   <td>{new Date(g.created_at).toLocaleDateString('pt-BR')}</td>
-                  <td>
-                    <button className="btn-icon" onClick={() => { setGastoAtual(g); setIsModalOpen(true); }}>✏️</button>
-                    <button className="btn-icon" onClick={() => handleDeleteGasto(g.id)}>🗑️</button>
+                  <td className="action-buttons">
+                    <button className="btn-icon edit" onClick={() => { setGastoAtual(g); setIsModalOpen(true); }}>✏️</button>
+                    <button className="btn-icon delete" onClick={() => handleDeleteGasto(g.id)}>🗑️</button>
                   </td>
                 </tr>
               ))}

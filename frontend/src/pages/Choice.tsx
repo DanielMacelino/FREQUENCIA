@@ -16,13 +16,23 @@ export default function Choice() {
 
   return (
     <div className="choice-page">
-      <button className="btn-back" onClick={backToUsers}>← Voltar</button>
-      <h2>Usuário: {user}</h2>
-      <h3>O que deseja ver?</h3>
-      <div className="choice-buttons">
-        <button className="btn" onClick={() => goTo('/frequencia')}>Frequencia</button>
-        <button className="btn" onClick={() => goTo('/fatura')}>Fatura</button>
-      </div>
+      <header className="choice-header">
+        <button className="btn-back" onClick={backToUsers}>← Voltar</button>
+        <h2 className="user-greeting">Usuário: {user}</h2>
+      </header>
+      <main className="choice-main">
+        <h3 className="section-title">O que deseja ver?</h3>
+        <div className="choice-buttons">
+          <button className="btn-choice" onClick={() => goTo('/frequencia')}>
+            <span className="icon">📅</span>
+            <span>Frequência</span>
+          </button>
+          <button className="btn-choice" onClick={() => goTo('/fatura')}>
+            <span className="icon">📄</span>
+            <span>Fatura</span>
+          </button>
+        </div>
+      </main>
     </div>
   );
 }

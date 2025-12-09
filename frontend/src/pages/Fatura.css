@@ -1,102 +1,175 @@
-.fatura-page {
-  padding: 2rem;
-  background-color: #f9f9f9;
+.fatura-container {
+  padding: 24px;
+  background-color: #f0f4f8;
+  min-height: 100vh;
 }
 
 .fatura-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 24px;
 }
 
 .fatura-header h1 {
-  font-size: 2rem;
-  color: #333;
+  font-size: 28px;
+  color: #1a202c;
 }
 
-.header-actions {
+.header-controls {
   display: flex;
-  gap: 1rem;
+  gap: 12px;
 }
 
-.kpi-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+.month-picker, .btn-add {
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e0;
+  background-color: #fff;
+  font-size: 14px;
 }
 
-.kpi-card {
+.btn-add {
+  background-color: #3182ce;
+  color: #fff;
+  border-color: #3182ce;
+  cursor: pointer;
+}
+
+.error-banner {
+  background-color: #fed7d7;
+  color: #c53030;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 24px;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #4a5568;
+}
+
+.kpi-bar {
   background: #fff;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.kpi-card h4 {
-  margin: 0 0 0.5rem;
-  font-size: 1rem;
-  color: #666;
-}
-
-.kpi-card p {
-  margin: 0;
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.charts-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.chart-card {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.chart-card h3 {
-  margin: 0 0 1rem;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
   text-align: center;
 }
 
-.table-section {
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+.kpi-item span {
+  font-size: 16px;
+  color: #718096;
+  display: block;
+  margin-bottom: 4px;
 }
 
-.table-container {
+.kpi-item strong {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.fatura-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.grid-item {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.grid-item h3 {
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #2d3748;
+}
+
+.chart-container {
+  height: 350px;
+}
+
+.ranking-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ranking-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.ranking-item:last-child {
+  border-bottom: none;
+}
+
+.ranking-item span {
+  color: #4a5568;
+}
+
+.ranking-item strong {
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.transactions-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.transactions-section h3 {
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.transactions-table-wrapper {
   max-height: 400px;
   overflow-y: auto;
 }
 
-table {
+.transactions-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-thead {
-  background-color: #f1f1f1;
+.transactions-table th, .transactions-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-th, td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #eee;
+.transactions-table thead th {
+  background-color: #f7fafc;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
 }
 
 .btn-icon {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.2rem;
-  margin-right: 0.5rem;
+  font-size: 16px;
 }
+
+.btn-icon.edit { color: #3182ce; }
+.btn-icon.delete { color: #c53030; }

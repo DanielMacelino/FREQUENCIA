@@ -14,6 +14,7 @@ export interface Frequencia {
   atividade: string;
   observacao?: string;
   created_at?: string;
+  user?: string;
 }
 
 export interface PeriodoResponse {
@@ -31,8 +32,8 @@ export const frequenciaService = {
     return response.data;
   },
 
-  getByPeriodo: async (ano: number, mes: number): Promise<PeriodoResponse> => {
-    const response = await api.get<PeriodoResponse>(`/frequencias/periodo/${ano}/${mes}`);
+  getByPeriodo: async (ano: number, mes: number, user: string): Promise<PeriodoResponse> => {
+    const response = await api.get<PeriodoResponse>(`/frequencias/periodo/${ano}/${mes}?user=${user}`);
     return response.data;
   },
 
@@ -62,4 +63,3 @@ export const frequenciaService = {
 };
 
 export default api;
-

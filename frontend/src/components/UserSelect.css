@@ -1,35 +1,69 @@
-.user-select {
+.user-select-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  gap: 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  min-height: 100vh;
+  background-color: #f0f4f8;
+  padding: 20px;
 }
-.user-select h1 {
-  font-size: 32px;
-  margin: 0;
+
+.user-select-card {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
 }
+
+.user-select-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 30px;
+}
+
 .user-list {
   display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  gap: 15px;
 }
+
 .user-btn {
-  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
   border-radius: 8px;
-  border: 2px solid white;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  border: 1px solid #e2e8f0;
+  background-color: #f7fafc;
+  color: #4a5568;
   cursor: pointer;
   font-size: 16px;
-  font-weight: bold;
-  transition: all 0.3s ease;
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.2s ease-in-out;
 }
+
 .user-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
+  background-color: #edf2f7;
+  border-color: #cbd5e0;
+}
+
+.user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #4299e1;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  margin-right: 15px;
+}
+
+.user-name {
+  flex-grow: 1;
 }

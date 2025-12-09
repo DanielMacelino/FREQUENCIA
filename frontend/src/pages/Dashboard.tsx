@@ -43,13 +43,20 @@ function Dashboard() {
     try {
       setLoading(true);
       setError(null);
-      const data = await frequenciaService.getByPeriodo(ano, mes);
+      const data = await frequenciaService.getByPeriodo(ano, mes, selectedUser);
       
-      setFrequencias(data.frequencias);
-      setTotalHoras(parseFloat(data.totalHoras));
+      if (data && data.frequencias) {
+        setFrequencias(data.frequencias);
+        setTotalHoras(parseFloat(data.totalHoras) || 0);
+      } else {
+        setFrequencias([]);
+        setTotalHoras(0);
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Erro ao carregar frequências';
       setError(message);
+      setFrequencias([]);
+      setTotalHoras(0);
     } finally {
       setLoading(false);
     }
@@ -75,6 +82,7 @@ function Dashboard() {
         horas: parseFloat(formData.horas),
         atividade: formData.atividade,
         observacao: formData.observacao,
+        user: selectedUser,
       };
 
       if (editingFrequencia?.id) {
