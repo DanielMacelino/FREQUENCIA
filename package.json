@@ -4,22 +4,16 @@
   "description": "Sistema de frequência e gestão de gastos para PET Saúde Digital",
   "private": true,
   "workspaces": [
-    "frontend",
-    "fatura/client",
-    "backend"
+    "frontend"
   ],
   "scripts": {
-    "dev": "npm run dev --workspaces",
+    "dev": "npm run dev:frontend",
     "dev:frontend": "npm run dev --workspace=frontend",
-    "dev:fatura": "npm run dev --workspace=fatura/client",
-    "dev:backend": "npm run dev --workspace=backend",
-    "build": "npm run build --workspaces",
+    "build": "npm run build:frontend",
     "build:frontend": "npm run build --workspace=frontend",
-    "build:fatura": "npm run build --workspace=fatura/client",
-    "build:backend": "npm run build --workspace=backend",
-    "build:prod": "npm run build:frontend && npm run build:fatura && npm run build:backend && node ./tools/clean-build.js",
-    "lint": "npm run lint --workspaces --if-present",
-    "type-check": "npm run type-check --workspaces --if-present"
+    "build:prod": "npm run build:frontend && node ./tools/clean-build.js",
+    "lint": "npm run lint --workspace=frontend --if-present",
+    "type-check": "npm run type-check --workspace=frontend --if-present"
   },
   "keywords": [
     "frequencia",

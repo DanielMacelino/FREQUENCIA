@@ -1,16 +1,25 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const envUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+const envKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
 
-let supabase: any = null;
+const supabaseUrl = envUrl || localStorage.getItem('VITE_SUPABASE_URL') || '';
+const supabaseAnonKey = envKey || localStorage.getItem('VITE_SUPABASE_ANON_KEY') || '';
+
+let supabase: SupabaseClient | null = null;
 if (supabaseUrl && supabaseAnonKey) {
   supabase = createClient(supabaseUrl, supabaseAnonKey);
 }
 
-const requireClient = (): any => {
+export function configureSupabase(url: string, anonKey: string) {
+  localStorage.setItem('VITE_SUPABASE_URL', url);
+  localStorage.setItem('VITE_SUPABASE_ANON_KEY', anonKey);
+  supabase = createClient(url, anonKey);
+}
+
+const requireClient = (): SupabaseClient => {
   if (!supabase) {
-    throw new Error('Configuração do Supabase ausente. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.');
+    throw new Error('Configuração do Supabase ausente. Defina VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY (env) ou configure via Settings na aplicação.');
   }
   return supabase;
 };

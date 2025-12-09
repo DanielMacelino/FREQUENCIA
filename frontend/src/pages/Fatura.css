@@ -1,0 +1,8 @@
+.fatura-page { padding: 20px; }
+.filtro { display:flex; gap:8px; align-items:center; margin:12px 0; }
+.gastos-list table { width:100%; border-collapse: collapse; }
+.gastos-list th, .gastos-list td { border:1px solid #ddd; padding:8px; }
+.config-supabase { margin:12px 0; display:flex; gap:8px; }
+.config-supabase input { padding:8px; width: 40%; }
+.btn-back { margin-bottom:8px; }
+.error-box { background:#fee; padding:8px; border:1px solid #f99; }

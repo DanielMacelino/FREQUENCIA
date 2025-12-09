@@ -5,7 +5,7 @@ import Dashboard from './pages/Dashboard';
 import './App.css';
 import UserSelect from './components/UserSelect';
 import Choice from './pages/Choice';
-import FaturaEmbed from './pages/FaturaEmbed';
+import Fatura from './pages/Fatura';
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
             <Route path="/" element={<UserSelect />} />
             <Route path="/choice" element={<Choice />} />
             <Route path="/frequencia" element={<Dashboard />} />
-            <Route path="/fatura" element={<FaturaEmbed />} />
+            <Route path="/fatura" element={<Fatura />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>
