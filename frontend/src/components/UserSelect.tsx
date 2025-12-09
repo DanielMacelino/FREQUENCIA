@@ -1,13 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import './UserSelect.css';
+import { useAppContext } from '../context/AppContext';
 
 const users = ['Daniel', 'douglas', 'Convidado 1'];
 
 export default function UserSelect() {
   const navigate = useNavigate();
+  const { setSelectedUser } = useAppContext();
 
   const handleSelect = (user: string) => {
-    localStorage.setItem('selectedUser', user);
+    // Atualiza via contexto para manter estado reativo em toda a app
+    setSelectedUser(user);
     navigate('/choice');
   };
 
