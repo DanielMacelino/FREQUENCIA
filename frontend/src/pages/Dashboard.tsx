@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabaseService } from '../services/supabaseClient';
-import { Frequencia } from '../types';
+import { frequenciaService, Frequencia } from '../services/api';
 import { Header } from '../components/Header';
 import { useAppContext } from '../context/AppContext';
 import { format, eachDayOfInterval, isSameDay, parseISO } from 'date-fns';
@@ -44,11 +43,10 @@ function Dashboard() {
     try {
       setLoading(true);
       setError(null);
-      const data = await supabaseService.frequencia.getByPeriodo(ano, mes, selectedUser);
-      const horas = await supabaseService.frequencia.getTotalHoras(ano, mes, selectedUser);
-
-      setFrequencias(data);
-      setTotalHoras(horas);
+      const data = await frequenciaService.getByPeriodo(ano, mes);
+      
+      setFrequencias(data.frequencias);
+      setTotalHoras(parseFloat(data.totalHoras));
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Erro ao carregar frequências';
       setError(message);
@@ -77,14 +75,12 @@ function Dashboard() {
         horas: parseFloat(formData.horas),
         atividade: formData.atividade,
         observacao: formData.observacao,
-        ano,
-        mes,
       };
 
       if (editingFrequencia?.id) {
-        await supabaseService.frequencia.update(editingFrequencia.id, frequenciaData);
+        await frequenciaService.update(editingFrequencia.id, frequenciaData);
       } else {
-        await supabaseService.frequencia.create(frequenciaData, selectedUser);
+        await frequenciaService.create(frequenciaData);
       }
 
       closeModal();
@@ -114,7 +110,7 @@ function Dashboard() {
     try {
       setLoading(true);
       setError(null);
-      await supabaseService.frequencia.delete(id);
+      await frequenciaService.delete(id);
       loadFrequencias();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Erro ao deletar frequência';
@@ -405,4 +401,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-
