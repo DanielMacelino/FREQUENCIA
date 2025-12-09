@@ -1,18 +1,38 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || '';
+// Primeiro tenta ler variáveis definidas em tempo de build, senão usa localStorage (dev runtime)
+const envUrl = process.env.REACT_APP_SUPABASE_URL as string | undefined;
+const envKey = process.env.REACT_APP_SUPABASE_ANON_KEY as string | undefined;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Variáveis de ambiente do Supabase não configuradas. Use .env com REACT_APP_SUPABASE_URL e REACT_APP_SUPABASE_ANON_KEY');
+const supabaseUrl = envUrl || (typeof window !== 'undefined' ? localStorage.getItem('REACT_APP_SUPABASE_URL') || '' : '');
+const supabaseAnonKey = envKey || (typeof window !== 'undefined' ? localStorage.getItem('REACT_APP_SUPABASE_ANON_KEY') || '' : '');
+
+let _supabase: SupabaseClient | null = null;
+if (supabaseUrl && supabaseAnonKey) {
+  _supabase = createClient(supabaseUrl, supabaseAnonKey);
+} else if (typeof window !== 'undefined') {
+  console.warn('Variáveis de ambiente do Supabase não configuradas. Você pode definir REACT_APP_SUPABASE_URL/REACT_APP_SUPABASE_ANON_KEY em .env ou via localStorage.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export function configureSupabase(url: string, anonKey: string) {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('REACT_APP_SUPABASE_URL', url);
+    localStorage.setItem('REACT_APP_SUPABASE_ANON_KEY', anonKey);
+  }
+  _supabase = createClient(url, anonKey);
+}
+
+const requireClient = (): SupabaseClient => {
+  if (!_supabase) {
+    throw new Error('Configuração do Supabase ausente. Defina REACT_APP_SUPABASE_URL/REACT_APP_SUPABASE_ANON_KEY em .env ou configure via Settings.');
+  }
+  return _supabase;
+};
 
 export const supabaseService = {
   gastos: {
     getByPeriodo: async (ano: number, mes: number) => {
-      const { data, error } = await supabase
+      const { data, error } = await requireClient()
         .from('gastos')
         .select('*')
         .eq('ano', ano)
@@ -24,7 +44,7 @@ export const supabaseService = {
     },
 
     create: async (gasto: any) => {
-      const { data, error } = await supabase
+      const { data, error } = await requireClient()
         .from('gastos')
         .insert([gasto])
         .select();
@@ -34,7 +54,7 @@ export const supabaseService = {
     },
 
     delete: async (id: number) => {
-      const { error } = await supabase
+      const { error } = await requireClient()
         .from('gastos')
         .delete()
         .eq('id', id);
@@ -43,7 +63,7 @@ export const supabaseService = {
     },
 
     getEstatisticas: async (ano: number, mes: number) => {
-      const { data, error } = await supabase
+      const { data, error } = await requireClient()
         .from('gastos')
         .select('*')
         .eq('ano', ano)
