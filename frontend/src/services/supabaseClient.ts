@@ -1,148 +1,51 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 
-const envUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const envKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+// Fallback values if environment variables are not set
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || "https://uvdatzwktfksgclcdwrq.supabase.co";
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV2ZGF0endrdGZrc2djbGNkd3JxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyNTM4MzIsImV4cCI6MjA4MDgyOTgzMn0.KeLWyqRgmw2yQvX64WARlbUKoTaY08cPfdCt8kfHnhM";
 
-const supabaseUrl = envUrl || localStorage.getItem('VITE_SUPABASE_URL') || '';
-const supabaseAnonKey = envKey || localStorage.getItem('VITE_SUPABASE_ANON_KEY') || '';
+let supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let supabase: SupabaseClient | null = null;
-if (supabaseUrl && supabaseAnonKey) {
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
-}
+export const configureSupabase = (url: string, key: string) => {
+  supabase = createClient(url, key);
+};
 
-export function configureSupabase(url: string, anonKey: string) {
-  localStorage.setItem('VITE_SUPABASE_URL', url);
-  localStorage.setItem('VITE_SUPABASE_ANON_KEY', anonKey);
-  supabase = createClient(url, anonKey);
-}
-
-const requireClient = (): SupabaseClient => {
-  if (!supabase) {
-    throw new Error('Configuração do Supabase ausente. Defina VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY (env) ou configure via Settings na aplicação.');
+const handleSupabaseError = (error: any, data: any) => {
+  if (error) {
+    console.error('Supabase error:', error.message);
+    throw new Error(error.message);
   }
-  return supabase;
+  return data;
 };
 
 export const supabaseService = {
-  // Frequência
-  frequencia: {
-    getByPeriodo: async (ano: number, mes: number, usuario: string) => {
-      const { data, error } = await requireClient()
-        .from('frequencias')
-        .select('*')
-        .eq('ano', ano)
-        .eq('mes', mes)
-        .eq('usuario', usuario)
-        .order('data', { ascending: true });
-      
-      if (error) throw error;
-      return data || [];
-    },
-
-    create: async (frequencia: any, usuario: string) => {
-      const { data, error } = await requireClient()
-        .from('frequencias')
-        .insert([{ ...frequencia, usuario }])
-        .select();
-      
-      if (error) throw error;
-      return data?.[0];
-    },
-
-    update: async (id: number, frequencia: any) => {
-      const { data, error } = await requireClient()
-        .from('frequencias')
-        .update(frequencia)
-        .eq('id', id)
-        .select();
-      
-      if (error) throw error;
-      return data?.[0];
-    },
-
-    delete: async (id: number) => {
-      const { error } = await requireClient()
-        .from('frequencias')
-        .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
-    },
-
-    getTotalHoras: async (ano: number, mes: number, usuario: string) => {
-      const { data, error } = await requireClient()
-        .from('frequencias')
-        .select('horas')
-        .eq('ano', ano)
-        .eq('mes', mes)
-        .eq('usuario', usuario);
-      
-      if (error) throw error;
-      const total = (data || []).reduce((sum: number, item: any) => sum + item.horas, 0);
-      return parseFloat(total.toFixed(2));
-    },
-  },
-
-  // Gastos/Fatura
   gastos: {
-    getByPeriodo: async (ano: number, mes: number) => {
-      const { data, error } = await requireClient()
+    async getByPeriodo(ano: number, mes: number) {
+      const { data, error } = await supabase
         .from('gastos')
         .select('*')
         .eq('ano', ano)
         .eq('mes', mes)
-        .order('data_criacao', { ascending: false });
-      
-      if (error) throw error;
-      return data || [];
+        .order('created_at', { ascending: false });
+      return handleSupabaseError(error, data);
     },
-
-    create: async (gasto: any) => {
-      const { data, error } = await requireClient()
-        .from('gastos')
-        .insert([gasto])
-        .select();
-      
-      if (error) throw error;
-      return data?.[0];
+    async create(gasto: any) {
+      const { data, error } = await supabase.from('gastos').insert(gasto).select();
+      return handleSupabaseError(error, data);
     },
-
-    delete: async (id: number) => {
-      const { error } = await requireClient()
-        .from('gastos')
-        .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
+    async update(id: number, gasto: any) {
+      const { data, error } = await supabase.from('gastos').update(gasto).eq('id', id);
+      return handleSupabaseError(error, data);
     },
-
-    getEstatisticas: async (ano: number, mes: number) => {
-      const { data, error } = await requireClient()
-        .from('gastos')
-        .select('*')
-        .eq('ano', ano)
-        .eq('mes', mes);
-      
-      if (error) throw error;
-
-      const gastos = data || [];
-      
-      const porPessoa: Record<string, number> = {};
-      const porCategoria: Record<string, number> = {};
-      let totalGeral = 0;
-
-      gastos.forEach((gasto: any) => {
-        porPessoa[gasto.pessoa] = (porPessoa[gasto.pessoa] || 0) + gasto.valor;
-        porCategoria[gasto.categorias] = (porCategoria[gasto.categorias] || 0) + gasto.valor;
-        totalGeral += gasto.valor;
-      });
-
-      return {
-        porPessoa: Object.entries(porPessoa).map(([pessoa, total]) => ({ pessoa, total })),
-        porCategoria: Object.entries(porCategoria).map(([categorias, total]) => ({ categorias, total })),
-        totalGeral,
-      };
-    },
+    async delete(id: number) {
+      const { data, error } = await supabase.from('gastos').delete().eq('id', id);
+      return handleSupabaseError(error, data);
+    }
   },
+  usuarios: {
+    async getAll() {
+      const { data, error } = await supabase.from('usuarios').select('nome');
+      return handleSupabaseError(error, data);
+    }
+  }
 };
