@@ -1,0 +1,271 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                 COMO EXECUTAR O SQL NO SUPABASE                           ║
+║                    (Instruções Passo-a-Passo)                             ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+ARQUIVO SQL PARA USAR:
+═════════════════════════════════════════════════════════════════════════════
+
+Escolha UM dos dois arquivos:
+
+  1. SQL_SIMPLES.sql       ← USE ESTE PRIMEIRO (versão simplificada)
+  2. SQL_CRIAR_BANCO.sql   ← (versão completa com documentação)
+
+Recomendo usar: SQL_SIMPLES.sql
+
+═════════════════════════════════════════════════════════════════════════════
+
+PASSO 1: ABRIR O SUPABASE
+────────────────────────────────────────────────────────────────────────────
+
+1. Abra: https://app.supabase.com
+2. Faça login com sua conta
+3. Selecione seu projeto (aquele que você criou)
+
+═════════════════════════════════════════════════════════════════════════════
+
+PASSO 2: ACESSAR O SQL EDITOR
+────────────────────────────────────────────────────────────────────────────
+
+Você vai ver este menu:
+
+    Dashboard
+    ├─ Project Settings
+    ├─ SQL Editor        ← CLIQUE AQUI
+    ├─ Table Editor
+    ├─ Authentication
+    └─ ...
+
+Menu Visual:
+┌───────────────────────────────────────┐
+│ [≡] Supabase Menu                     │
+├───────────────────────────────────────┤
+│                                       │
+│ > Project Settings                   │
+│ > SQL Editor           ← CLIQUE AQUI │
+│ > Table Editor                        │
+│ > Storage                             │
+│                                       │
+└───────────────────────────────────────┘
+
+═════════════════════════════════════════════════════════════════════════════
+
+PASSO 3: CRIAR NOVA QUERY
+────────────────────────────────────────────────────────────────────────────
+
+No SQL Editor, você vai ver:
+
+┌──────────────────────────────────────────────────────┐
+│ SQL Editor                                           │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│   [+ New Query]   [Favorites]   [Templates]         │
+│                                                      │
+│   _____________________________________              │
+│                                                      │
+│   Editor SQL (vazio)                                │
+│                                                      │
+└──────────────────────────────────────────────────────┘
+
+Clique em: [+ New Query]
+
+═════════════════════════════════════════════════════════════════════════════
+
+PASSO 4: ABRIR O ARQUIVO SQL
+────────────────────────────────────────────────────────────────────────────
+
+1. Abra o arquivo: SQL_SIMPLES.sql (está na pasta do projeto)
+2. Ou abra o arquivo: SQL_CRIAR_BANCO.sql (versão completa)
+
+Você vai ver o conteúdo do arquivo SQL.
+
+═════════════════════════════════════════════════════════════════════════════
+
+PASSO 5: COPIAR O CONTEÚDO SQL
+────────────────────────────────────────────────────────────────────────────
+
+1. Selecione TUDO o conteúdo do arquivo SQL
+   Atalho: Ctrl+A (ou Cmd+A no Mac)
+
+2. Copie
+   Atalho: Ctrl+C (ou Cmd+C no Mac)
+
+Visual:
+┌──────────────────────────────────────────────────┐
+│ SQL_SIMPLES.sql                                  │
+├──────────────────────────────────────────────────┤
+│ -- =============================================  │
+│ -- SCRIPT SQL PARA SUPABASE                      │
+│ -- =============================================  │
+│                                                  │
+│ CREATE TABLE IF NOT EXISTS frequencias (        │
+│   id BIGSERIAL PRIMARY KEY,                     │
+│   usuario VARCHAR(255) NOT NULL,               │
+│   ...                                            │
+│                                                  │
+│ [TUDO SELECIONADO - COPIAR AGORA]              │
+│                                                  │
+└──────────────────────────────────────────────────┘
+
+═════════════════════════════════════════════════════════════════════════════
+
+PASSO 6: COLAR NO SUPABASE
+────────────────────────────────────────────────────────────────────────────
+
+1. Clique no editor SQL branco do Supabase
+2. Cole o conteúdo
+   Atalho: Ctrl+V (ou Cmd+V no Mac)
+
+Resultado:
+┌──────────────────────────────────────────────────┐
+│ [+ New Query] [Save] [Delete]  [Run]             │
+├──────────────────────────────────────────────────┤
+│ -- =============================================  │
+│ -- SCRIPT SQL PARA SUPABASE                      │
+│ -- =============================================  │
+│                                                  │
+│ CREATE TABLE IF NOT EXISTS frequencias (        │
+│   id BIGSERIAL PRIMARY KEY,                     │
+│   usuario VARCHAR(255) NOT NULL,               │
+│   ...                                            │
+│                                                  │
+│                                                  │
+└──────────────────────────────────────────────────┘
+
+═════════════════════════════════════════════════════════════════════════════
+
+PASSO 7: EXECUTAR O SCRIPT
+────────────────────────────────────────────────────────────────────────────
+
+Você vai ver um botão [RUN] no canto superior direito (azul):
+
+    [← Back] [Save] [Delete]  [RUN] ← CLIQUE AQUI
+
+OU use o atalho:
+    Ctrl + Enter (Windows/Linux)
+    Cmd + Enter (Mac)
+
+═════════════════════════════════════════════════════════════════════════════
+
+PASSO 8: AGUARDE A EXECUÇÃO
+────────────────────────────────────────────────────────────────────────────
+
+A execução vai levar alguns segundos.
+
+Você vai ver uma mensagem como esta:
+
+    ✓ Query executed successfully
+    Duration: 234ms
+
+OU
+
+    ✓ Successfully executed
+
+═════════════════════════════════════════════════════════════════════════════
+
+🎉 SUCESSO! AS TABELAS FORAM CRIADAS!
+────────────────────────────────────────────────────────────────────────────
+
+Se você viu a mensagem ✓ Query executed successfully, significa que:
+
+✓ Tabela FREQUENCIAS foi criada
+✓ Tabela GASTOS foi criada
+✓ Tabela USUARIOS foi criada
+✓ Os usuários (Daniel, douglas, Convidado 1) foram inseridos
+✓ Os índices foram criados
+
+═════════════════════════════════════════════════════════════════════════════
+
+COMO VERIFICAR SE FUNCIONOU
+────────────────────────────────────────────────────────────────────────────
+
+MÉTODO 1: No Table Editor
+─────────────────────────────
+
+1. Clique em "Table Editor" no menu esquerdo
+2. Você deve ver 3 tabelas novas:
+
+    ├─ frequencias ✓
+    ├─ gastos ✓
+    └─ usuarios ✓
+
+MÉTODO 2: Executar SELECT para Verificar
+─────────────────────────────────────────
+
+No SQL Editor, execute esta query:
+
+    SELECT * FROM usuarios;
+
+Resultado esperado:
+
+    ┌────┬──────────────┬──────────────────────┐
+    │ id │ nome         │ email                │
+    ├────┼──────────────┼──────────────────────┤
+    │ 1  │ Daniel       │ daniel@exemplo.com   │
+    │ 2  │ douglas      │ douglas@exemplo.com  │
+    │ 3  │ Convidado 1  │ convidado1@exemple.. │
+    └────┴──────────────┴──────────────────────┘
+
+═════════════════════════════════════════════════════════════════════════════
+
+❌ SE DER ERRO
+────────────────────────────────────────────────────────────────────────────
+
+Erro: "CREATE TABLE already exists"
+Solução: Isso é NORMAL! Significa que as tabelas já existem.
+         Você pode ignorar este erro.
+         
+Erro: "Permission denied"
+Solução: Verifique se está logado com a conta correta.
+         Confirme que tem acesso ao projeto.
+
+Erro: "Syntax error on line X"
+Solução: Verifique se copiou o script inteiro.
+         Tente copiar novamente do arquivo.
+
+═════════════════════════════════════════════════════════════════════════════
+
+✅ PRÓXIMOS PASSOS
+────────────────────────────────────────────────────────────────────────────
+
+1. ✓ Script SQL executado
+2. → Configure o arquivo .env (veja SUPABASE_SETUP.md)
+3. → Instale dependências (npm install)
+4. → Teste localmente (npm run dev)
+5. → Deploy em produção
+
+═════════════════════════════════════════════════════════════════════════════
+
+📞 RESUMO VISUAL DO FLUXO
+
+┌─────────────────┐
+│ app.supabase.com│
+└────────┬────────┘
+         │
+         ▼
+┌──────────────────┐
+│ SQL Editor       │
+│ [+ New Query]    │
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ Colar SQL aqui   │
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ Clique [RUN]     │
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│ ✓ Success!       │
+│ Tabelas criadas! │
+└──────────────────┘
+
+═════════════════════════════════════════════════════════════════════════════
+
+Arquivo mais detalhado: EXECUTAR_SQL.md
+
+═════════════════════════════════════════════════════════════════════════════

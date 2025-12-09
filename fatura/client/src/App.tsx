@@ -7,8 +7,7 @@ import Graficos from './components/Graficos';
 import GastosPorPessoa from './components/GastosPorPessoa';
 import FaturaFinal from './components/FaturaFinal';
 import { Gasto, Estatisticas } from './types';
-
-const API_URL = 'http://localhost:5000/api';
+import { supabaseService } from './supabaseClient';
 
 function App() {
   const [mesSelecionado, setMesSelecionado] = useState<number>(new Date().getMonth() + 1);
@@ -29,8 +28,7 @@ function App() {
   const carregarGastos = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/gastos/${anoSelecionado}/${mesSelecionado}`);
-      const data = await response.json();
+      const data = await supabaseService.gastos.getByPeriodo(anoSelecionado, mesSelecionado);
       setGastos(data);
     } catch (error) {
       console.error('Erro ao carregar gastos:', error);
@@ -41,8 +39,7 @@ function App() {
 
   const carregarEstatisticas = async () => {
     try {
-      const response = await fetch(`${API_URL}/estatisticas/${anoSelecionado}/${mesSelecionado}`);
-      const data = await response.json();
+      const data = await supabaseService.gastos.getEstatisticas(anoSelecionado, mesSelecionado);
       setEstatisticas(data);
     } catch (error) {
       console.error('Erro ao carregar estatísticas:', error);
@@ -51,18 +48,14 @@ function App() {
 
   const handleAdicionarGasto = async (novoGasto: Omit<Gasto, 'id' | 'data_criacao'>) => {
     try {
-      const response = await fetch(`${API_URL}/gastos`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(novoGasto),
+      await supabaseService.gastos.create({
+        ...novoGasto,
+        mes: mesSelecionado,
+        ano: anoSelecionado,
       });
 
-      if (response.ok) {
-        await carregarGastos();
-        await carregarEstatisticas();
-      }
+      await carregarGastos();
+      await carregarEstatisticas();
     } catch (error) {
       console.error('Erro ao adicionar gasto:', error);
     }
@@ -70,14 +63,9 @@ function App() {
 
   const handleDeletarGasto = async (id: number) => {
     try {
-      const response = await fetch(`${API_URL}/gastos/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (response.ok) {
-        await carregarGastos();
-        await carregarEstatisticas();
-      }
+      await supabaseService.gastos.delete(id);
+      await carregarGastos();
+      await carregarEstatisticas();
     } catch (error) {
       console.error('Erro ao deletar gasto:', error);
     }

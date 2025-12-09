@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
-import { frequenciaService, Frequencia, PeriodoResponse } from '../services/api';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, parseISO } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import { supabaseService } from '../services/supabaseClient';
+import { Frequencia, PeriodoResponse } from '../services/api';
+import { format, eachDayOfInterval, isSameDay, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import './Dashboard.css';
 
 function Dashboard() {
+  const navigate = useNavigate();
+  const selectedUser = typeof window !== 'undefined' ? (localStorage.getItem('selectedUser') || '') : '';
   const [frequencias, setFrequencias] = useState<Frequencia[]>([]);
   const [periodoData, setPeriodoData] = useState<PeriodoResponse | null>(null);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -28,9 +32,28 @@ function Dashboard() {
   const loadFrequencias = async () => {
     try {
       setLoading(true);
-      const data = await frequenciaService.getByPeriodo(ano, mes);
-      setPeriodoData(data);
-      setFrequencias(data.frequencias);
+      if (!selectedUser) {
+        alert('Usuário não selecionado');
+        return;
+      }
+      
+      const data = await supabaseService.frequencia.getByPeriodo(ano, mes, selectedUser);
+      const totalHoras = await supabaseService.frequencia.getTotalHoras(ano, mes, selectedUser);
+      
+      const dataInicio = new Date(ano, mes - 1, 20);
+      const proximoMes = mes === 12 ? 1 : mes + 1;
+      const proximoAno = mes === 12 ? ano + 1 : ano;
+      const dataFim = new Date(proximoAno, proximoMes - 1, 19);
+      
+      setPeriodoData({
+        frequencias: data,
+        periodo: {
+          dataInicio: format(dataInicio, 'yyyy-MM-dd'),
+          dataFim: format(dataFim, 'yyyy-MM-dd'),
+        },
+        totalHoras,
+      });
+      setFrequencias(data);
     } catch (error) {
       console.error('Erro ao carregar frequências:', error);
       alert('Erro ao carregar frequências');
@@ -43,28 +66,33 @@ function Dashboard() {
     e.preventDefault();
     try {
       setLoading(true);
-      if (editingFrequencia) {
-        await frequenciaService.update(editingFrequencia.id!, {
-          data: formData.data,
-          horas: parseFloat(formData.horas),
-          atividade: formData.atividade,
-          observacao: formData.observacao,
-        });
-      } else {
-        await frequenciaService.create({
-          data: formData.data,
-          horas: parseFloat(formData.horas),
-          atividade: formData.atividade,
-          observacao: formData.observacao,
-        });
+      if (!selectedUser) {
+        alert('Usuário não selecionado');
+        return;
       }
+
+      const frequenciaData = {
+        data: formData.data,
+        horas: parseFloat(formData.horas),
+        atividade: formData.atividade,
+        observacao: formData.observacao,
+        ano,
+        mes,
+      };
+
+      if (editingFrequencia) {
+        await supabaseService.frequencia.update(editingFrequencia.id!, frequenciaData);
+      } else {
+        await supabaseService.frequencia.create(frequenciaData, selectedUser);
+      }
+      
       setShowModal(false);
       setEditingFrequencia(null);
       resetForm();
       loadFrequencias();
     } catch (error: any) {
       console.error('Erro ao salvar frequência:', error);
-      const errorMessage = error?.response?.data?.error || error?.response?.data?.details || error?.message || 'Erro ao salvar frequência';
+      const errorMessage = error?.message || 'Erro ao salvar frequência';
       alert(`Erro ao salvar frequência: ${errorMessage}`);
     } finally {
       setLoading(false);
@@ -86,7 +114,7 @@ function Dashboard() {
     if (!confirm('Tem certeza que deseja excluir esta frequência?')) return;
     try {
       setLoading(true);
-      await frequenciaService.delete(id);
+      await supabaseService.frequencia.delete(id);
       loadFrequencias();
     } catch (error) {
       console.error('Erro ao deletar frequência:', error);
@@ -141,14 +169,28 @@ function Dashboard() {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + direction, 1));
   };
 
+  const backToChoice = () => {
+    navigate('/choice');
+  };
+
   return (
     <div className="dashboard">
       <div className="dashboard-container">
         <header className="dashboard-header">
-          <h1>Sistema de Frequência - PET Saúde Digital</h1>
-          <button className="btn-primary" onClick={openModal}>
-            <span>+</span> Nova Frequência
-          </button>
+          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+            <div>
+              <h1>Sistema de Frequência - PET Saúde Digital</h1>
+              {selectedUser && <div style={{fontSize: 14, color: '#666'}}>Usuário: {selectedUser}</div>}
+            </div>
+            <div style={{display: 'flex', gap: '8px'}}>
+              <button className="btn-primary" onClick={openModal}>
+                <span>+</span> Nova Frequência
+              </button>
+              <button className="btn-secondary" onClick={backToChoice} style={{padding: '8px 12px'}}>
+                ← Voltar
+              </button>
+            </div>
+          </div>
         </header>
 
         <div className="stats-cards">

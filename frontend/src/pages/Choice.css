@@ -1,0 +1,23 @@
+.choice-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px 20px;
+  position: relative;
+}
+.btn-back {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btn-back:hover { background: #e0e0e0 }
+.choice-buttons { display: flex; gap: 12px; margin-top: 20px }
+.btn { padding: 12px 20px; border-radius: 6px; border: 1px solid #2b6cb0; background: #3182ce; color: #fff; cursor: pointer; font-size: 16px; font-weight: bold }
+.btn:hover { opacity: 0.95 }
