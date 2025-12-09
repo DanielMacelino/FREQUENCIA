@@ -3,17 +3,23 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Variáveis de ambiente do Supabase não configuradas. Use .env com VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY');
+let supabase: any = null;
+if (supabaseUrl && supabaseAnonKey) {
+  supabase = createClient(supabaseUrl, supabaseAnonKey);
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const requireClient = (): any => {
+  if (!supabase) {
+    throw new Error('Configuração do Supabase ausente. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.');
+  }
+  return supabase;
+};
 
 export const supabaseService = {
   // Frequência
   frequencia: {
     getByPeriodo: async (ano: number, mes: number, usuario: string) => {
-      const { data, error } = await supabase
+      const { data, error } = await requireClient()
         .from('frequencias')
         .select('*')
         .eq('ano', ano)
@@ -26,7 +32,7 @@ export const supabaseService = {
     },
 
     create: async (frequencia: any, usuario: string) => {
-      const { data, error } = await supabase
+      const { data, error } = await requireClient()
         .from('frequencias')
         .insert([{ ...frequencia, usuario }])
         .select();
@@ -36,7 +42,7 @@ export const supabaseService = {
     },
 
     update: async (id: number, frequencia: any) => {
-      const { data, error } = await supabase
+      const { data, error } = await requireClient()
         .from('frequencias')
         .update(frequencia)
         .eq('id', id)
@@ -47,7 +53,7 @@ export const supabaseService = {
     },
 
     delete: async (id: number) => {
-      const { error } = await supabase
+      const { error } = await requireClient()
         .from('frequencias')
         .delete()
         .eq('id', id);
@@ -56,7 +62,7 @@ export const supabaseService = {
     },
 
     getTotalHoras: async (ano: number, mes: number, usuario: string) => {
-      const { data, error } = await supabase
+      const { data, error } = await requireClient()
         .from('frequencias')
         .select('horas')
         .eq('ano', ano)
@@ -72,7 +78,7 @@ export const supabaseService = {
   // Gastos/Fatura
   gastos: {
     getByPeriodo: async (ano: number, mes: number) => {
-      const { data, error } = await supabase
+      const { data, error } = await requireClient()
         .from('gastos')
         .select('*')
         .eq('ano', ano)
@@ -84,7 +90,7 @@ export const supabaseService = {
     },
 
     create: async (gasto: any) => {
-      const { data, error } = await supabase
+      const { data, error } = await requireClient()
         .from('gastos')
         .insert([gasto])
         .select();
@@ -94,7 +100,7 @@ export const supabaseService = {
     },
 
     delete: async (id: number) => {
-      const { error } = await supabase
+      const { error } = await requireClient()
         .from('gastos')
         .delete()
         .eq('id', id);
@@ -103,7 +109,7 @@ export const supabaseService = {
     },
 
     getEstatisticas: async (ano: number, mes: number) => {
-      const { data, error } = await supabase
+      const { data, error } = await requireClient()
         .from('gastos')
         .select('*')
         .eq('ano', ano)
